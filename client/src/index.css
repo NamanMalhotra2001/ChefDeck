@@ -1,0 +1,69 @@
+:root {
+	/* fonts */
+	--font1: 'Caveat';
+	--font2: 'Indie Flower';
+	--font3: 'Open Sans';
+	--font4: 'Quicksand';
+	--font5: 'Marck Script';
+
+	/* colors */
+	--gradient: linear-gradient(
+		342deg,
+		rgba(211, 244, 32, 1) 0%,
+		rgba(184, 239, 51, 1) 7%,
+		rgba(149, 232, 76, 1) 20%,
+		rgba(134, 229, 86, 1) 35%,
+		rgba(0, 195, 131, 1) 100%
+	);
+	--olive: #3c372a;
+	--onion: #4f2238;
+	--highlight: rgba(250, 235, 215, 0.616);
+
+	--shadow: 0px 5px 10px #aaa;
+	--shadow-sm: 0px 3px 3px #aaa;
+}
+
+* {
+	transition: 0.4s;
+	font-family: var(--font4);
+}
+
+.home-wrapper {
+	display: flex;
+}
+
+.highlight :hover {
+	background-color: var(--highlight);
+	box-shadow: var(--shadow-sm);
+
+	border-radius: 5px;
+}
+
+::-webkit-scrollbar {
+	width: 13px;
+	height: 13px;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: var(--olive);
+	border: white 3px solid;
+	border-radius: 100vw;
+}
+
+::-webkit-scrollbar-track {
+	margin: 10px;
+}
+
+body {
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+		'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+		'Helvetica Neue', sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+code {
+	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+		monospace;
+}
