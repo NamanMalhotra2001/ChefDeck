@@ -1,6 +1,14 @@
 const mongoose = require('mongoose');
 const postSchema = new mongoose.Schema(
 	{
+		userId: {
+			type: String,
+			required: true,
+		},
+		owner: {
+			type: String,
+			required: true,
+		},
 		title: {
 			type: String,
 			unique: true,
@@ -13,10 +21,6 @@ const postSchema = new mongoose.Schema(
 		banner: {
 			type: String,
 			default: '',
-		},
-		userId: {
-			type: String,
-			required: true,
 		},
 		categories: {
 			type: Array,

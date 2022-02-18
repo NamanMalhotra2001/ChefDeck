@@ -15,7 +15,8 @@ router.put('/update/:id', async (req, res) => {
 				req.params.id,
 				{
 					$set: req.body,
-				}
+				},
+				{ new: true }
 			);
 			res.status(200).json(updatedUser);
 		} catch (error) {
@@ -31,7 +32,7 @@ router.delete('/delete/:id', async (req, res) => {
 	if (req.body.userId === req.params.id) {
 		const user = await User.findById(req.params.id);
 		if (!user) {
-			res.status(404).json('User not found!');
+			res.status(404).json('🤭 User not found!');
 		} else {
 			try {
 				await Post.deleteMany({ userId: req.params.id });
@@ -57,7 +58,6 @@ router.get('/find/:id', async (req, res) => {
 		res.status(500).json(error);
 	}
 });
-
 
 // ########## get all users ##########
 router.get('/all', async (req, res) => {
