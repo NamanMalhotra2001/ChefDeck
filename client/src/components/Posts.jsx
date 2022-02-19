@@ -1,39 +1,45 @@
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-function Posts() {
+function Posts({ posts }) {
 	const navigate = useNavigate();
 
 	return (
 		<Wrapper>
-			<Card onClick={() => navigate(`/post/1234`)}>
-				<img
-					src='images/splash3.jpg'
-					alt='pic'
-					className='post-pic'
-				/>
+			{Object.keys(posts).length > 0
+				? posts.reverse().map((post, k) => (
+						<Card
+							key={k}
+							onClick={() => navigate(`/post/${post._id}`)}
+						>
+							<img
+								src={
+									post.banner === ''
+										? `images/splash3.jpg`
+										: post.banner
+								}
+								alt='pic'
+								className='post-pic'
+							/>
 
-				<span className='tag-container'>
-					<span className='tag'>#Recipe</span>
-					<span className='tag'>#Spicy</span>
-				</span>
+							<span className='tag-container'>
+								{post.categories.map((c, k) => (
+									<span key={k} className='tag'>
+										#{c}
+									</span>
+								))}
+							</span>
 
-				<h2 className='post-title'>Lorem ipsum, dolor sit amet</h2>
+							<h2 className='post-title'>{post.title}</h2>
 
-				<h4 className='post-time'>1 hour ago</h4>
+							<h4 className='post-time'>
+								{new Date(post.createdAt).toDateString()}
+							</h4>
 
-				<p className='post-text'>
-					Lorem ipsum dolor sit amet consectetur adipisicing
-					elit. Voluptas blanditiis hic debitis quo ducimus quis
-					ullam. Veritatis enim magni officiis maiores delectus
-					ratione, consequatur dolores ipsum aliquid voluptates.
-					Nulla, hic. Lorem ipsum dolor sit amet consectetur
-					adipisicing elit. Expedita, id omnis. Cumque iure rem
-					est distinctio odit consequuntur minus molestias, alias
-					blanditiis nam voluptate omnis sit obcaecati sequi
-					corporis impedit.
-				</p>
-			</Card>
+							<p className='post-text'>{post.content}</p>
+						</Card>
+				  ))
+				: ''}
 		</Wrapper>
 	);
 }
@@ -55,7 +61,7 @@ const Card = styled.div`
 
 	:hover {
 		background-color: var(--highlight);
-		box-shadow: var(--shadow);
+		box-shadow: var(--shadow-lg);
 	}
 
 	.post-pic {
@@ -89,7 +95,7 @@ const Card = styled.div`
 	}
 
 	.post-text {
-		margin: 0;
+		margin: 0 0 20px 0;
 		max-height: 15vh;
 
 		overflow: hidden;

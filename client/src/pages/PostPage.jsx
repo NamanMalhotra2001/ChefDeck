@@ -1,51 +1,62 @@
-import React from 'react';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { FiEdit, FiTrash2 } from 'react-icons/fi';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Sidebar from '../components/Sidebar';
-import { FiEdit, FiTrash2 } from 'react-icons/fi';
 
 function PostPage() {
-	// ########## initial ##########
 	const { postId } = useParams();
+	const [post, setPost] = useState(null);
+
+	// ########## fetch data ##########
+	useEffect(() => {
+		const fetchPost = async () => {
+			const res = await axios.get(
+				`http://localhost:5000/post/find/${postId}`
+			);
+			setPost(res.data);
+		};
+		fetchPost();
+	}, [postId]);
 
 	return (
 		<div style={{ display: 'flex' }}>
-			<Wrapper>
-				<img
-					src='/images/splash3.jpg'
-					alt='pic'
-					className='post-pic'
-				/>
+			{post !== null ? (
+				<Wrapper>
+					<img
+						src={
+							post.banner === ''
+								? `/images/splash3.jpg`
+								: post.banner
+						}
+						alt='pic'
+						className='post-pic'
+					/>
 
-				<div className='content'>
-					<TitleControl>
-						<h1 className='post-title'>
-							Lorem ipsum dolor sit amet
-						</h1>
+					<div className='content'>
+						<TitleControl>
+							<h1 className='post-title'>{post.title}</h1>
 
-						<span className='edit-delete'>
-							<FiEdit style={{ color: 'green' }} />
-							<FiTrash2 style={{ color: '#9c0000' }} />
-						</span>
-					</TitleControl>
+							<span className='edit-delete'>
+								<FiEdit style={{ color: 'green' }} />
+								<FiTrash2 style={{ color: '#9c0000' }} />
+							</span>
+						</TitleControl>
 
-					<AuthorTime>
-						<h3 className='author'>Naman Malhotra</h3>
-						<span className='time'>1 hour ago</span>
-					</AuthorTime>
+						<AuthorTime>
+							<h3 className='author'>{post.owner}</h3>
+							<span className='time'>
+								{new Date(post.createdAt).toDateString()}
+							</span>
+						</AuthorTime>
 
-					<PostText>
-						<p>
-							Lorem ipsum dolor sit amet consectetur,
-							adipisicing elit. Quidem reprehenderit iure et
-							id dicta provident perferendis aliquam
-							laudantium! Sint voluptatum deserunt iste unde,
-							aliquid nesciunt nisi voluptatem. Ducimus,
-							exercitationem dolorum!
-						</p>
-					</PostText>
-				</div>
-			</Wrapper>
+						<PostText>{post.content}</PostText>
+					</div>
+				</Wrapper>
+			) : (
+				''
+			)}
 			<Sidebar />
 		</div>
 	);
@@ -54,17 +65,17 @@ function PostPage() {
 export default PostPage;
 
 // ########## styled components ##########
-const PostText = styled.div`
+const PostText = styled.p`
+	width: 100%;
+	box-sizing: border-box;
+	padding: 1rem;
+	padding-right: 3rem;
 	min-height: 60vh;
 	margin-top: 3vh;
+	font-size: larger;
 
 	::first-letter {
 		font-size: xx-large;
-	}
-
-	p {
-		width: 80%;
-		font-size: larger;
 	}
 `;
 

@@ -20,8 +20,8 @@ router.post('/new', async (req, res) => {
 
 // ########## update post ##########
 router.put('/update/:id', async (req, res) => {
-	try {
-		const post = await Post.findById(req.params.id);
+	const post = await Post.findById(req.params.id);
+	if (post !== null) {
 		if (post.userId === req.body.userId) {
 			try {
 				const updatedPost = await Post.findByIdAndUpdate(
@@ -38,8 +38,8 @@ router.put('/update/:id', async (req, res) => {
 		} else {
 			res.status(401).json('✋🏼🛑 You can only edit your posts!');
 		}
-	} catch (error) {
-		res.status(500).json(error);
+	} else {
+		res.status(404).json('🤭 No such post!');
 	}
 });
 
@@ -78,7 +78,7 @@ router.get('/find/:id', async (req, res) => {
 // ########## get all posts ##########
 router.get('/all', async (req, res) => {
 	const query = req.query;
-	if (Object.keys(query).length !== 0) {
+	if (Object.keys(query).length > 0) {
 		try {
 			let posts = await Post.find();
 			if (query.category) {
