@@ -4,7 +4,7 @@ function Header() {
 	return (
 		<Wrapper>
 			<span>ChefDeck</span>
-			<img src='/images/splash2.jpg' alt='splash' />
+			<img src='/images/splash3.jpg' alt='splash' />
 		</Wrapper>
 	);
 }

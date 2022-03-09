@@ -1,14 +1,20 @@
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 
 function NoPage() {
+	// ########## initial ##########
 	let navigate = useNavigate();
+	let path = window.location.pathname;
+
 	useEffect(() => {
 		setTimeout(() => {
-			navigate(-1);
+			if (path === window.location.pathname) {
+				navigate(-1);
+			}
 		}, 5000);
-	}, [navigate]);
+	}, [navigate, path]);
+	// ########## initial ##########
 
 	return (
 		<NoPageWrapper>

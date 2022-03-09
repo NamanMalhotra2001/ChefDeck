@@ -11,8 +11,7 @@ function WritePage() {
 
 	return (
 		<Wrapper>
-			<img src='/images/splash.jpg' alt='' className='post-pic' />
-
+			<img src='/images/splash3.jpg' alt='' className='post-pic' />
 
 			<form
 				style={{ width: '100%' }}

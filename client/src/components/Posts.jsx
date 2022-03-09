@@ -1,13 +1,15 @@
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import LoadingSpinner from './LoadingSpinner';
 
 function Posts({ posts }) {
 	const navigate = useNavigate();
 
 	return (
-		<Wrapper>
-			{Object.keys(posts).length > 0
-				? posts.reverse().map((post, k) => (
+		<>
+			{Object.keys(posts).length > 0 ? (
+				<Wrapper>
+					{posts.map((post, k) => (
 						<Card
 							key={k}
 							onClick={() => navigate(`/post/${post._id}`)}
@@ -38,9 +40,19 @@ function Posts({ posts }) {
 
 							<p className='post-text'>{post.content}</p>
 						</Card>
-				  ))
-				: ''}
-		</Wrapper>
+					))}
+				</Wrapper>
+			) : (
+				<div
+					style={{
+						paddingTop: '5rem',
+						flex: '3',
+					}}
+				>
+					<LoadingSpinner />
+				</div>
+			)}
+		</>
 	);
 }
 

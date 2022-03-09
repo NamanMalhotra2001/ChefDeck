@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import {
 	FiFacebook,
 	FiInstagram,
@@ -7,10 +8,19 @@ import {
 } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { Context } from '../context/Context';
 
 function Navbar() {
 	// ########## initial ##########
 	const navigate = useNavigate();
+	const { user, dispatch } = useContext(Context);
+	// ########## initial ##########
+
+	// ########## handler functions ##########
+	function handleLogout() {
+		dispatch({ type: 'LOGOUT' });
+	}
+	// ########## handler functions ##########
 
 	return (
 		<Wrapper>
@@ -23,19 +33,46 @@ function Navbar() {
 
 			<NavbarMid>
 				<button onClick={() => navigate('/')}>Home</button>
-				<button>About</button>
 				<button>Contact</button>
-				<button onClick={() => navigate('/write')}>Write</button>
-				<button>Logout</button>
+				{user ? (
+					<>
+						<button onClick={() => navigate('/write')}>
+							Write
+						</button>
+						<button
+							onClick={() => {
+								handleLogout();
+								navigate('/');
+							}}
+						>
+							Logout
+						</button>
+					</>
+				) : (
+					<></>
+				)}
 			</NavbarMid>
 
 			<NavbarRight>
-				<img
-					src='https://picsum.photos/200'
-					alt='avatar'
-					onClick={() => navigate('/account')}
-				/>
-				<FiSearch />
+				{user ? (
+					<>
+						<img
+							src='https://picsum.photos/200'
+							alt='avatar'
+							onClick={() => navigate('/account')}
+						/>
+						<FiSearch />
+					</>
+				) : (
+					<>
+						<button onClick={() => navigate('/login')}>
+							Login
+						</button>
+						<button onClick={() => navigate('/register')}>
+							Register
+						</button>
+					</>
+				)}
 			</NavbarRight>
 		</Wrapper>
 	);
@@ -57,6 +94,24 @@ const NavbarRight = styled.div`
 	* {
 		cursor: pointer;
 	}
+
+	button {
+		min-width: 100px;
+		width: 10%;
+		border: none;
+		border-radius: 5px;
+		outline: none;
+		padding-top: 5px;
+		background-color: white;
+		font-size: x-large;
+		font-family: var(--font4);
+		cursor: pointer;
+
+		:focus,
+		:hover {
+			color: var(--cheese);
+		}
+	}
 `;
 
 const NavbarMid = styled.div`
@@ -64,7 +119,7 @@ const NavbarMid = styled.div`
 	gap: 10px;
 
 	button {
-		min-width: 100px;
+		flex: 1;
 		width: 10%;
 		border: none;
 		border-radius: 5px;
@@ -77,20 +132,6 @@ const NavbarMid = styled.div`
 
 		:focus {
 			animation: click 0.6s;
-		}
-	}
-
-	@keyframes click {
-		0% {
-			box-shadow: none;
-		}
-
-		50% {
-			box-shadow: var(--shadow);
-		}
-
-		100% {
-			box-shadow: none;
 		}
 	}
 `;
@@ -112,8 +153,7 @@ const Wrapper = styled.div`
 	user-select: none;
 	position: sticky;
 	top: 0;
-	height: 4vw;
-	min-height: 70px;
+	height: 70px;
 	margin: 0 auto;
 	display: flex;
 

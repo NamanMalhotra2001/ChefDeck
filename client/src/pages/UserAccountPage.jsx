@@ -12,7 +12,6 @@ function UserAccountPage() {
 
 					<h2>E-mail</h2>
 					<input type='text' className='field' />
-
 					<h2>Password</h2>
 					<input type='password' className='field' />
 					<button>Update</button>

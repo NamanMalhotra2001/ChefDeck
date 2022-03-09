@@ -1,22 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { axiosInstance } from '../axiosConfig';
 import Header from '../components/Header';
 import Posts from '../components/Posts';
 import Sidebar from '../components/Sidebar';
-import axios from 'axios';
 
 function HomePage() {
+	// ########## initial ##########
+	const { search } = useLocation();
+	// ########## initial ##########
+
 	// ########## states ##########
 	const [posts, setPosts] = useState({});
+	// ########## states ##########
 
 	// ########## fetch data ##########
 	useEffect(() => {
 		const fetchPosts = async () => {
-			const res = await axios.get('http://localhost:5000/post/all');
-			setPosts(res.data);
+			const res = await axiosInstance.get('post/all' + search);
+			setPosts(res.data.reverse());
 		};
 
 		fetchPosts();
-	}, []);
+	}, [search]);
+	// ########## fetch data ##########
 
 	return (
 		<div>

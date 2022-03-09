@@ -1,24 +1,26 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { FiEdit, FiTrash2 } from 'react-icons/fi';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import { axiosInstance } from '../axiosConfig';
+import LoadingSpinner from '../components/LoadingSpinner';
 import Sidebar from '../components/Sidebar';
 
 function PostPage() {
+	// ########## initial ##########
 	const { postId } = useParams();
 	const [post, setPost] = useState(null);
+	// ########## initial ##########
 
 	// ########## fetch data ##########
 	useEffect(() => {
 		const fetchPost = async () => {
-			const res = await axios.get(
-				`http://localhost:5000/post/find/${postId}`
-			);
+			const res = await axiosInstance.get(`post/find/${postId}`);
 			setPost(res.data);
 		};
 		fetchPost();
 	}, [postId]);
+	// ########## fetch data ##########
 
 	return (
 		<div style={{ display: 'flex' }}>
@@ -55,7 +57,7 @@ function PostPage() {
 					</div>
 				</Wrapper>
 			) : (
-				''
+				<LoadingSpinner />
 			)}
 			<Sidebar />
 		</div>

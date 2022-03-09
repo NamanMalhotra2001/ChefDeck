@@ -1,25 +1,57 @@
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { axiosInstance } from '../axiosConfig';
 
 function Sidebar() {
+	// ########## initial ##########
+	const navigate = useNavigate();
+	// ########## initial ##########
+
+	// ########## states ##########
+	const [categories, setCategories] = useState(null);
+	// ########## states ##########
+
+	// ########## fetch data ##########
+	useEffect(() => {
+		const getCategories = async () => {
+			const res = await axiosInstance.get('categories');
+			setCategories(res.data.slice(-10));
+		};
+		getCategories();
+	}, []);
+	// ########## fetch data ##########
+
 	return (
 		<Wrapper>
+			<h2>CUISINES</h2>
+			<div className='cuisine-container'>
+				{categories !== null ? (
+					categories.map((c, k) => (
+						<span
+							key={k}
+							onClick={() => {
+								navigate(`/?category=${c.name}`);
+								setTimeout(() => {
+									window.scrollTo(0, 680);
+								}, 1);
+							}}
+						>
+							{c.name}
+						</span>
+					))
+				) : (
+					<></>
+				)}
+			</div>
 			<h2>ABOUT ME</h2>
-			<img src='/images/splash.jpg' alt='pic' />
+			<img src='/images/splash2.jpg' alt='pic' />
 			<p>
 				Lorem ipsum dolor sit amet consectetur adipisicing elit.
 				Repudiandae magnam ex fuga rem cupiditate officiis nemo
 				similique, nostrum deleniti mollitia labore placeat aut
 				ducimus incidunt veniam vero accusamus iure ipsam.
 			</p>
-			<h2>CUISINES</h2>
-			<div className='cuisine-container'>
-				<span>Chinese</span>
-				<span>Indian</span>
-				<span>Italian</span>
-				<span>Korean</span>
-				<span>American</span>
-				<span>Japanese</span>
-			</div>
 		</Wrapper>
 	);
 }
@@ -43,7 +75,8 @@ const Wrapper = styled.div`
 	}
 
 	h2 {
-		padding-block: 1vh;
+		padding-block: 10px;
+		margin-block: 20px;
 		width: 50%;
 		border-top: solid 1px var(--olive);
 		border-bottom: solid 1px var(--olive);
@@ -52,16 +85,30 @@ const Wrapper = styled.div`
 
 	p {
 		width: 80%;
+		margin-block: 20px;
 	}
 
 	.cuisine-container {
+		width: 50%;
 		padding-block: 2vh;
 		display: flex;
 		flex-wrap: wrap;
-		row-gap: 2vh;
 
 		span {
 			width: 50%;
+			cursor: pointer;
+			padding-block: 1vh;
+			outline: solid 1px white;
+
+			@media only screen and (max-width: 800px) {
+				width: 100%;
+			}
+
+			:hover,
+			:focus {
+				outline: solid 1px gray;
+				z-index: 999;
+			}
 		}
 	}
 `;
