@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { axiosInstance } from '../axiosConfig';
+import Fields from '../components/Fields';
 
 function RegisterButton() {
 	// ########## initial ##########
@@ -9,6 +10,7 @@ function RegisterButton() {
 	// ########## initial ##########
 
 	// ########## states ##########
+	const [error, setError] = useState('');
 	const [values, setValues] = useState({
 		username: '',
 		email: '',
@@ -24,17 +26,15 @@ function RegisterButton() {
 			placeholder: 'Choose a username',
 			autoFocus: true,
 			pattern: '^[A-Za-z0-9]{4,16}$',
-			errorMessage:
+			errormessage:
 				'Username can be 4-16 characters. (no specials!)',
-			focused: false,
 		},
 		{
 			name: 'email',
 			label: 'Email',
 			type: 'email',
 			placeholder: 'Enter your email address',
-			errorMessage: 'Should be a valid e-mail address!',
-			focused: false,
+			errormessage: 'Should be a valid e-mail address!',
 		},
 
 		{
@@ -43,9 +43,8 @@ function RegisterButton() {
 			type: 'password',
 			placeholder: 'Choose a password',
 			pattern: '^(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$',
-			errorMessage:
+			errormessage:
 				'Minimum 8 characters with atleast one number, special and uppercase character!',
-			focused: false,
 		},
 		{
 			name: 'confirmPassword',
@@ -53,17 +52,12 @@ function RegisterButton() {
 			type: 'password',
 			placeholder: 'Re-enter the password',
 			pattern: values.password,
-			errorMessage: "Passwords don't match!",
-			focused: false,
+			errormessage: "Passwords don't match!",
 		},
 	];
-
 	// ########## states ##########
 
 	// ########## handler functions ##########
-	function handleFocus() {
-	}
-
 	const handleUpdate = (e) => {
 		setValues({ ...values, [e.target.name]: e.target.value });
 	};
@@ -76,10 +70,9 @@ function RegisterButton() {
 				email: values.email,
 				password: values.password,
 			});
-			res.data && navigate('/login');
-			console.log(res.data);
+			res.data && navigate('/login') && setError('');
 		} catch (error) {
-			console.log(error);
+			setError('User exists try different credentials!');
 		}
 	};
 	// ########## handler functions ##########
@@ -88,16 +81,11 @@ function RegisterButton() {
 		<Wrapper bg={`/images/splash4.jpg`}>
 			<RegisterForm onSubmit={(e) => register(e)}>
 				<h1 className='header'>Register</h1>
+				<Error visible={error !== '' ? 'true' : 'false'}>
+					{error}
+				</Error>
 				{inputs.map((i, k) => (
-					<React.Fragment key={k}>
-						<h4>{i.label}</h4>
-						<Field
-							onChange={(e) => handleUpdate(e)}
-							required
-							{...i}
-						/>
-						<Error>{i.errorMessage}</Error>
-					</React.Fragment>
+					<Fields key={k} i={i} handleUpdate={handleUpdate} />
 				))}
 				<button className='register-button'>Register</button>
 			</RegisterForm>
@@ -110,23 +98,11 @@ export default RegisterButton;
 // ########## styled components ##########
 const Error = styled.span`
 	margin-bottom: 15px;
+	margin-top: -10px;
 	color: red;
-	font-size: small;
-	display: none;
-`;
-
-const Field = styled.input`
-	min-height: 15px;
-	margin-block: 5px;
-	border: none;
-	outline: none;
-	background-color: #d4d4d4;
-	border-radius: 10px;
-	padding: 10px;
-
-	:valid {
-		margin-bottom: 15px;
-	}
+	font-size: medium;
+	text-align: center;
+	display: ${(props) => (props.visible === 'true' ? 'block' : 'none')};
 `;
 
 const RegisterForm = styled.form`
@@ -176,7 +152,22 @@ const RegisterForm = styled.form`
 		}
 	}
 
-	${Field}:invalid[focused="true"] ~ ${Error} {
+	.field {
+		min-height: 15px;
+		margin-block: 5px;
+		border: none;
+		outline: none;
+		background-color: #d4d4d4;
+		border-radius: 10px;
+		padding: 10px;
+
+		:valid,
+		:invalid {
+			margin-bottom: 15px;
+		}
+	}
+
+	.field:invalid ~ ${Error} {
 		display: block;
 	}
 `;
